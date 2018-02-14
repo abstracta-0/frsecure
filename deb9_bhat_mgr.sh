@@ -147,10 +147,16 @@ echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
 sysctl vm.overcommit_memory=1
 
 # fix latency issues with redis-server
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-cp /etc/rc.local /etc/rc.local.bak
-sed -i 's+exit 0+echo never > /sys/kernel/mm/transparent_hugepage/enabled+' /etc/rc.local
-echo 'exit 0' >> /etc/rc.local
+#echo never > /sys/kernel/mm/transparent_hugepage/enabled
+#cp /etc/rc.local /etc/rc.local.bak
+#sed -i 's+exit 0+echo never > /sys/kernel/mm/transparent_hugepage/enabled+' /etc/rc.local
+#echo 'exit 0' >> /etc/rc.local
+
+## /etc/rc.local creation
+cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc-local.service /etc/systemd/system/rc-local.service
+cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc.local /etc/rc.local
+systemctl enable rc-local
+systemctl start rc-local.service
 
 /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-check-setup.sh --v9
 
