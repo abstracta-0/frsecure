@@ -124,8 +124,8 @@ cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-manager.service /etc/systemd/system/
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-scanner.service /etc/systemd/system/openvas-scanner.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/greenbone-security-assistant.service /etc/systemd/system/greenbone-security-assistant.service
 
-systemctl enable openvas-manager.service
 systemctl enable openvas-scanner.service
+systemctl enable openvas-manager.service
 systemctl enable greenbone-security-assistant.service
 
 cp /etc/systemd/system/redis.service /etc/systemd/system/redis.service.bak
