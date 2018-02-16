@@ -145,9 +145,9 @@ gsad
 #openvasmd --progress --rebuild
 
 # redis-server background save may fail under low memory condition, changing to "1"
-cp /etc/sysctl.conf /etc/sysctl.conf.bak
-echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
-sysctl vm.overcommit_memory=1
+#cp /etc/sysctl.conf /etc/sysctl.conf.bak
+#echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
+#sysctl vm.overcommit_memory=1
 
 # fix latency issues with redis-server
 #echo never > /sys/kernel/mm/transparent_hugepage/enabled
@@ -157,7 +157,7 @@ sysctl vm.overcommit_memory=1
 
 ## /etc/rc.local creation
 
-cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc-local.service /etc/systemd/system/rc-local.service
+#cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc-local.service /etc/systemd/system/rc-local.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc.local /etc/rc.local
 systemctl enable rc-local
 systemctl start rc-local.service
