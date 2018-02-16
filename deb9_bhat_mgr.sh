@@ -117,6 +117,9 @@ cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-db-update.sh /usr/local/sbin/openvas
 
 # cp services to correct directories
 
+chmod 644 /etc/systemd/system/openvas-manager.service
+chmod 644 /etc/systemd/system/openvas-scanner.service
+chmod 644 /etc/systemd/system/greenbone-security-assistant.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-manager.service /etc/systemd/system/openvas-manager.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-scanner.service /etc/systemd/system/openvas-scanner.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/greenbone-security-assistant.service /etc/systemd/system/greenbone-security-assistant.service
@@ -153,6 +156,7 @@ sysctl vm.overcommit_memory=1
 #echo 'exit 0' >> /etc/rc.local
 
 ## /etc/rc.local creation
+
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc-local.service /etc/systemd/system/rc-local.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc.local /etc/rc.local
 systemctl enable rc-local
