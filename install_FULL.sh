@@ -6,10 +6,10 @@ mkdir /etc/OpenVAS
 path2="/etc/OpenVAS"
 cd $(echo $path2 | tr -d '\r')
 
-apt-get update && apt-get dist-upgrade -y && apt-get install git
+apt-get update && apt-get install git -y
 
 
-git clone https://github.com/abstracta-0/deb9_OpenVAS_deploy.git
+git clone -b abstracta-0-services-644s https://github.com/abstracta-0/deb9_OpenVAS_deploy.git
 
 cd deb9_OpenVAS_deploy
 

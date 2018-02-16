@@ -6,7 +6,7 @@
 
 apt-get update && apt-get dist-upgrade -y
 
-apt-get install -y net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3 libhiredis-dev libgcrypt11-dev libgnutls28-dev redis-server texlive-latex-base texlive-latex-recommended linux-headers-$(uname -r) python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin certbot nmap ufw
+apt-get install -y net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3 libhiredis-dev libgcrypt11-dev libgnutls28-dev redis-server texlive-latex-base texlive-latex-recommended python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin nmap ufw
 
 # cleanly download and compile packages/libraries to /etc/OpenVAS
 mkdir /etc/OpenVAS
@@ -117,6 +117,9 @@ cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-db-update.sh /usr/local/sbin/openvas
 
 # cp services to correct directories
 
+chmod 644 /etc/systemd/system/openvas-manager.service
+chmod 644 /etc/systemd/system/openvas-scanner.service
+chmod 644 /etc/systemd/system/greenbone-security-assistant.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-manager.service /etc/systemd/system/openvas-manager.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-scanner.service /etc/systemd/system/openvas-scanner.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/greenbone-security-assistant.service /etc/systemd/system/greenbone-security-assistant.service
@@ -153,6 +156,7 @@ sysctl vm.overcommit_memory=1
 #echo 'exit 0' >> /etc/rc.local
 
 ## /etc/rc.local creation
+
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc-local.service /etc/systemd/system/rc-local.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc.local /etc/rc.local
 systemctl enable rc-local
