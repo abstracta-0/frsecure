@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dhclient
+# dhclient
 
 mkdir /etc/OpenVAS
 path2="/etc/OpenVAS"
