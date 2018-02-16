@@ -2,7 +2,7 @@
 
 # insure that the system is up to date
 
-dhclient
+# dhclient
 
 apt-get update && apt-get dist-upgrade -y
 
