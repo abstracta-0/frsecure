@@ -145,9 +145,9 @@ gsad
 #openvasmd --progress --rebuild
 
 # redis-server background save may fail under low memory condition, changing to "1"
-#cp /etc/sysctl.conf /etc/sysctl.conf.bak
-#echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
-#sysctl vm.overcommit_memory=1
+cp /etc/sysctl.conf /etc/sysctl.conf.bak
+echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
+sysctl vm.overcommit_memory=1
 
 # fix latency issues with redis-server
 #echo never > /sys/kernel/mm/transparent_hugepage/enabled
