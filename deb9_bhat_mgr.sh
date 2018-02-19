@@ -83,7 +83,7 @@ cd ../
 
 cp /etc/redis/redis.conf /etc/redis/redis.conf.bak
 sed -i 's+port 6379+port 0+' /etc/redis/redis.conf
-sed -i 's+# unixsocket /var/run/redis/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/redis.conf
+sed -i 's+# unixsocket /tmp/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/redis.conf
 
 sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/redis.conf
 
