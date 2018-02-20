@@ -10,8 +10,8 @@
 # bits.
 #
 # By default this script does nothing.
-sysctl -w net.core.somaxconn=65535
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
+#sysctl -w net.core.somaxconn=65535
+#echo never > /sys/kernel/mm/transparent_hugepage/enabled
 openvasmd --listen=127.0.0.1 --port=9391
 
 exit 0
