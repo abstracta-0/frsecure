@@ -158,6 +158,10 @@ cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc.local /etc/rc.local
 systemctl enable rc-local
 systemctl start rc-local.service
 
+#make alias for easier console management in userspace
+echo "alias ompadm='omp --host=127.0.0.1 --port=9391 --username=admin'" >> ~/.bashrc
+. 
+
 /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-check-setup.sh --v9
 
 reboot
