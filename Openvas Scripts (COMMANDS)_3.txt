@@ -1,0 +1,152 @@
+﻿http://docs.greenbone.net/API/OMP/omp-7.0.html#command_summary
+
+### Create and Modify User accounts
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+### Deploying/Troubleshooting Certificate Infrastructure
+
+## Default Infrastructure - Sets up certificate infrastructure with default values
+# openvas-manage-certs -a
+
+## Create a scanner credential for the SLAVE
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+### Create, Modify, and View Scan Configurations
+
+## View Scan Configuration Options 
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --get-configs
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+### Create, Modify, and View Schedules
+
+## Create Schedule
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --xml='<create_schedule><name>Friday 2-16-2018</name><first_time><day_of_month>16</day_of_month><hour>9</hour><minute>0</minute><month>2</month><year>2018</year></first_time></create_schedule>'
+
+## View Schedules
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --get-schedules
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+### Create, Modify, and View Targets (hosts, ranges, IP addresses)
+
+## Create Target
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --xml='<create_target><name>[TARGET NAME]</name><comment>[Comment]<hosts>[IP RANGES]</hosts></create_target>'
+
+## View Targets (UUID, Name)
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --get-targets
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+### Create, Modify, Start/Stop, and View Tasks(Scans)
+
+## Create Task
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --xml='<create_task><name>[TASK NAME]</name><target id="[Target UUID]"/><config id="[Config UUID]"/>
+
+## Start Task
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --xml='<start_task task_id="[Task ID]"/>
+
+## Stop Task
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --xml='<stop_task task_id="[Task ID]"/>
+
+## View Task (Status, UUID, Name)
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --get-tasks
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+### Create, Modify, Test Scanners
+
+## Create Scanner *Run this command on the Master; type '3' configures the communication to act as OSP Slave(Remote Scanner)
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --xml='<create_scanner><name>[Scanner Name]</name><comment>[COMMENTS]</comment><host>[SCANNER IP]</host><port>[Port Num]</port><type>3</type><ca_pub>[Cert of CA]</ca_pub><credential id="[CERT CRED]"/></create_scanner>
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+### View/Download Task Reports
+
+## Provides the Report UUID for the get command
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --xml='<get_tasks task_id="[Task ID]"/>' | awk -F '<report id="' '{print $2}' | cut -d'"' -f1
+
+## View XML Report
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --xml='<get_reports report_id="[Report ID]"/>'
+
+## Provides a list of Assets(Targets) that have been scanned
+# omp --host=[host IP] --port=[Port Num] --username=[username] --password=[your password] --xml='<get_assets type="host"/>' --pretty-print | grep -E '<name>[0-9]' | awk -F '<name>' '{print $2}' | cut -d'<' -f1
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+===Some commands=== Create a user: 
+
+*I used uuid to create a role id originally but this didn't work, they must be mapped to something. I don't know what.
+
+omp --username admin --xml='<create_user><name>demo</name><password>demo</password><role id="8d453140-b74d-11e2-b0be-406186ea4fc5"/></create_user>'
+
+Verify the user has been created: 
+
+omp --username admin --xml='<get_users/>'
+
+Get config options: 
+
+omp --username demo -g
+
+Create a target: 
+
+*Replace the details yourself 
+
+omp --username demo --xml='<create_target><name>test target</name><hosts>192.168.1.24</hosts></create_target>'
+
+Get targets: 
+
+sudo omp --username demo -T
+
+Get report output format options: 
+
+omp --username admin -w OMITTED -F
+
+===Running some stuff=== 
+
+Get config options: 
+
+[root@localhost ~]# omp --username admin -w OMITTED -g 8715c877-47a0-438d-98a3-27c7a6ab2196 Discovery 085569ce-73ed-11df-83c3-002264764cea empty daba56c8-73ec-11df-a475-002264764cea Full and fast 698f691e-7489-11df-9d8c-002264764cea Full and fast ultimate 708f25c4-7489-11df-8094-002264764cea Full and very deep 74db13d6-7489-11df-91b9-002264764cea Full and very deep ultimate 2d3f051c-55ba-11e3-bf43-406186ea4fc5 Host Discovery bbca7412-a950-11e3-9109-406186ea4fc5 System Discovery
+
+List targets: 
+
+*The first two were created in the UI which I installed as a sanity check before getting the CLI to work! 
+
+[root@localhost ~]# omp --username admin -w OMITTED -T 6bec93ae-c821-4f4c-8eb4-3ffdf31f03f7 Target for immediate scan of IP 192.168.1.24 f7b3b950-945d-44c8-94f6-7852bb68ec44 Target for immediate scan of IP 192.168.1.24 1624c558-8129-43f4-8dbd-ecbf364aa96d Test target
+
+Create task: 
+
+*This returns the task ID 
+
+[root@localhost ~]# omp --username admin -w OMITTED -C -c daba56c8-73ec-11df-a475-002264764cea --target=1624c558-8129-43f4-8dbd-ecbf364aa96d 0a985114-432a-4a06-8b2c-e481a7f6adc2
+
+Verify the creation: 
+
+*The first two were created in the UI which I installed as a sanity check before getting the CLI to work! 
+
+[root@localhost ~]# omp --username admin -w OMITTED --get-tasks 832a6c97-f2b7-4131-8e82-7821a63dadb0 Done Immediate scan of IP 192.168.1.24 20ea9a18-ad15-431b-86c5-569510f3c897 Stopped Immediate scan of IP 192.168.1.24 0a985114-432a-4a06-8b2c-e481a7f6adc2 New unnamed task [root@localhost ~]#
+
+Start task: 
+
+[root@localhost ~]# omp --username admin -w OMITTED --start-task 0a985114-432a-4a06-8b2c-e481a7f6adc2 2cafd8fd-2382-4bd9-8c9b-62806db3cd98
+
+List tasks: 
+
+[root@localhost ~]# omp --username admin -w OMITTED -G 832a6c97-f2b7-4131-8e82-7821a63dadb0 Done Immediate scan of IP 192.168.1.24 20ea9a18-ad15-431b-86c5-569510f3c897 Stopped Immediate scan of IP 192.168.1.24 0a985114-432a-4a06-8b2c-e481a7f6adc2 Running 1% unnamed task
+[root@localhost ~]#
+
+Get task details: 
+
+*Do this once the task is Done 
+
+omp --username admin -w OMITTED -iX '<get_tasks details="1"/>'
+
+Print report as format: 
+
+*The format ID is taken from get report output format 
+*The report ID is taken from Get task details 
+
+omp --username admin -w OMITTED -R 0c869368-dd04-41a6-9c63-c3c2c7acd7c9 -f a994b278-1f62-11e1-96ac-406186ea4fc5﻿
+
+## how do edit the config???
+omp -h 127.0.0.1 -u admin -p 9391 -g -v
