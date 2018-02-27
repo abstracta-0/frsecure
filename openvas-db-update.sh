@@ -9,21 +9,21 @@ while [ $status != 0 ];do
 	status=$(echo $?)
 done
 
-systemctl is-active --quiet openvas-manager.service
+systemctl is-active --quiet openvas-manager-slave.service
 status=$(echo $?)
 
 while [ $status != 0 ];do
-	systemctl start openvas-manager
+	systemctl start openvas-manager-slave
 	status=$(echo $?)
 done
 
-systemctl is-active --quiet greenbone-security-assistant.service
-status=$(echo $?)
+#systemctl is-active --quiet greenbone-security-assistant.service
+#status=$(echo $?)
 
-while [ $status != 0 ];do
-	systemctl start greenbone-security-assistant
-	status=$(echo $?)
-done
+#while [ $status != 0 ];do
+#	systemctl start greenbone-security-assistant
+#	status=$(echo $?)
+#done
 
 greenbone-nvt-sync
 greenbone-scapdata-sync
