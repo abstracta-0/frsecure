@@ -117,13 +117,13 @@ cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-db-update.sh /usr/local/sbin/openvas
 
 # cp services to correct directories
 
-cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-manager.service /etc/systemd/system/openvas-manager.service
+cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-manager-slave.service /etc/systemd/system/openvas-manager-slave.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-scanner.service /etc/systemd/system/openvas-scanner.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/greenbone-security-assistant.service /etc/systemd/system/greenbone-security-assistant.service
 
-systemctl enable openvas-manager.service
+systemctl enable openvas-manager-slave.service
 systemctl enable openvas-scanner.service
-systemctl enable greenbone-security-assistant.service
+#systemctl enable greenbone-security-assistant.service
 
 cp /etc/systemd/system/redis.service /etc/systemd/system/redis.service.bak
 sed -i 's+PrivateTmp=yes+PrivateTmp=no+' /etc/systemd/system/redis.service
@@ -136,7 +136,7 @@ sed -i 's+#!/^.{8,}$/+!/^.{8,}$/+' /usr/local/etc/openvas/pwpolicy.conf
 # or hung up here???
 openvassd
 openvasmd
-gsad
+#gsad
 
 # does this need to go after "openvas-manage-certs -fa"
 #openvasmd --progress --rebuild
@@ -159,7 +159,7 @@ systemctl enable rc-local
 systemctl start rc-local.service
 
 #make alias for easier console management in userspace
-echo "alias ompadm='omp --host=127.0.0.1 --port=9391 --username=admin'" >> ~/.bashrc
+echo "alias ompadm='omp --host=0.0.0.0 --port=9390 --username=slave'" >> ~/.bashrc
 . ~/.bashrc
 
 /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-check-setup.sh --v9
