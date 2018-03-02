@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenVAS - Greenbone Security Assistant
+After=network.target
+
+[Service]
+ExecStart=/usr/local/sbin/gsad --foreground
+
+[Install]
+WantedBy=multi-user.target
