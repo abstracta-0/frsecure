@@ -6,7 +6,7 @@
 
 apt-get update && apt-get dist-upgrade -y
 
-apt-get install -y screen texlive-latex-base texlive-latex-extra texlive-latex-recommended net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3 libhiredis-dev libgcrypt20-dev libgnutls28-dev redis-server linux-headers-$(uname -r) python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin certbot nmap ufw
+apt-get install -y tcl screen texlive-latex-base texlive-latex-extra texlive-latex-recommended net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3  libgcrypt20-dev libgnutls28-dev linux-headers-$(uname -r) python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin certbot nmap ufw
 
 apt-get purge -y texlive-*-doc 
 
@@ -15,7 +15,7 @@ mkdir /etc/OpenVAS
 path="/etc/OpenVAS"
 cd $(echo $path | tr -d '\r')
 
-
+wget -nc http://download.redis.io/releases/redis-stable.tar.gz
 wget -nc http://wald.intevation.org/frs/download.php/2420/openvas-libraries-9.0.1.tar.gz
 wget -nc http://wald.intevation.org/frs/download.php/2423/openvas-scanner-5.1.1.tar.gz
 wget -nc http://wald.intevation.org/frs/download.php/2448/openvas-manager-7.0.2.tar.gz
@@ -27,6 +27,11 @@ wget -nc http://wald.intevation.org/frs/download.php/2405/ospd-debsecan-1.2b1.ta
 wget -nc http://wald.intevation.org/frs/download.php/2218/ospd-nmap-1.0b1.tar.gz
 
 for i in $(ls *.tar.gz); do tar zxvf $i; done
+
+cd redis-stable/
+make
+make install
+yes '' | /etc/OpenVAS/redis-stable/utils/install_server.sh
 
 cd openvas-libraries-9.0.1/
 mkdir build
@@ -83,10 +88,20 @@ python setup.py build
 python setup.py install
 cd ../
 
-cp /etc/redis/redis.conf /etc/redis/redis.conf.bak
-sed -i 's+port 6379+port 0+' /etc/redis/redis.conf
-sed -i 's+# unixsocket /var/run/redis/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/redis.conf
-sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/redis.conf
+#cp /etc/redis/redis.conf /etc/redis/redis.conf.bak
+#sed -i 's+port 6379+port 0+' /etc/redis/redis.conf
+#sed -i 's+# unixsocket /var/run/redis/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/redis.conf
+#sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/redis.conf
+
+### Redis 4.0 setup ### UNTESTED ######
+sed -i 's+port 6379+port 0+' /etc/redis/6379.conf
+sed -i 's+# unixsocket /tmp/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/6379.conf
+sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/6379.conf
+sed -i 's+REDISPORT="6379"+REDISPORT="0"+' /etc/init.d/redis_6379
+systemctl enable redis_6379
+systemctl daemon-reload
+systemctl start redis_6379
+
 
 # stop from making redis socket in /tmp/systemd-private-*-redis-server.service-*/tmp/redis.sock
 sed -i 's+PrivateTmp=yes+PrivateTmp=no+' /etc/systemd/system/redis.service
@@ -166,6 +181,6 @@ echo "alias ompadm='omp --host=127.0.0.1 --port=9391 --username=admin --pretty-p
 # make 'openvas-check-setup.sh --v9' finish successfully
 #openvasmd --create-user=administrator --role=Admin && openvasmd --user=administrator --new-password=
 
-
+apt-get autoremove -y
 apt-get clean -y
 reboot
