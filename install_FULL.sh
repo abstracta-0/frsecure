@@ -9,7 +9,7 @@ cd $(echo $path2 | tr -d '\r')
 apt-get update && apt-get dist-upgrade -y && apt-get install git
 
 
-git clone https://github.com/abstracta-0/deb9_OpenVAS_deploy.git
+git clone -b master-v2 https://github.com/abstracta-0/deb9_OpenVAS_deploy.git
 
 cd deb9_OpenVAS_deploy
 
