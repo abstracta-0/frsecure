@@ -32,6 +32,15 @@ cd redis-stable/
 make
 make install
 yes '' | /etc/OpenVAS/redis-stable/utils/install_server.sh
+### Redis 4.0 setup ### UNTESTED ######
+# things for redis 3.x with "##" were previously enabled
+sed -i 's+port 6379+port 0+' /etc/redis/6379.conf
+sed -i 's+# unixsocket /tmp/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/6379.conf
+sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/6379.conf
+sed -i 's+REDISPORT="6379"+REDISPORT="0"+' /etc/init.d/redis_6379
+systemctl enable redis_6379
+systemctl daemon-reload
+systemctl start redis_6379
 
 cd openvas-libraries-9.0.1/
 mkdir build
@@ -93,25 +102,17 @@ cd ../
 #sed -i 's+# unixsocket /var/run/redis/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/redis.conf
 #sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/redis.conf
 
-### Redis 4.0 setup ### UNTESTED ######
-sed -i 's+port 6379+port 0+' /etc/redis/6379.conf
-sed -i 's+# unixsocket /tmp/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/6379.conf
-sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/6379.conf
-sed -i 's+REDISPORT="6379"+REDISPORT="0"+' /etc/init.d/redis_6379
-systemctl enable redis_6379
-systemctl daemon-reload
-systemctl start redis_6379
-
-
 # stop from making redis socket in /tmp/systemd-private-*-redis-server.service-*/tmp/redis.sock
-sed -i 's+PrivateTmp=yes+PrivateTmp=no+' /etc/systemd/system/redis.service
+## not relevant to redis 4.0
+##sed -i 's+PrivateTmp=yes+PrivateTmp=no+' /etc/systemd/system/redis.service
 
 # redis-server background save may fail under low memory condition, changing to "1"
+## this is a redis 3.x configuration
 cp /etc/sysctl.conf /etc/sysctl.conf.bak
 echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
 sysctl vm.overcommit_memory=1
 
-service redis-server restart
+##service redis-server restart
 ldconfig -v
 
 # generate an openvassd conf file from the defaul one currently running
@@ -134,7 +135,7 @@ systemctl enable openvasmd.service
 systemctl enable gsad.service
 systemctl daemon-reload
 
-# start openvas services right now to 
+# start openvas services right now
 systemctl start openvassd.service
 systemctl start openvasmd.service 
 systemctl start gsad.service
