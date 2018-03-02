@@ -87,14 +87,20 @@ cd ../
 cp /etc/redis/redis.conf /etc/redis/redis.conf.bak
 sed -i 's+port 6379+port 0+' /etc/redis/redis.conf
 sed -i 's+# unixsocket /var/run/redis/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/redis.conf
-
 sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/redis.conf
 
+# stop from making redis socket in /tmp/systemd-private-*-redis-server.service-*/tmp/redis.sock
+sed -i 's+PrivateTmp=yes+PrivateTmp=no+' /etc/systemd/system/redis.service
+
+# redis-server background save may fail under low memory condition, changing to "1"
+cp /etc/sysctl.conf /etc/sysctl.conf.bak
+echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
+sysctl vm.overcommit_memory=1
 
 service redis-server restart
 ldconfig -v
 
-
+# generate an openvassd conf file from the defaul one currently running
 openvassd -s > /usr/local/etc/openvas/openvassd.conf
 cp /usr/local/etc/openvas/openvassd.conf /usr/local/etc/openvas/openvassd.conf.bak
 sed -i 's+/tmp/redis.sock+/var/run/redis/redis.sock+' /usr/local/etc/openvas/openvassd.conf
@@ -103,51 +109,40 @@ greenbone-nvt-sync
 greenbone-scapdata-sync
 greenbone-certdata-sync
 
-#when do i need to start openvassd?
-openvassd
+# cp services to correct directories
+cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvassd.service /etc/systemd/system/openvassd.service
+cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvasmd.service /etc/systemd/system/openvasmd.service
+cp /etc/OpenVAS/deb9_OpenVAS_deploy/gsad.service /etc/systemd/system/gsad.service
+
+# start openvas services on startup
+systemctl enable openvassd.service
+systemctl enable openvasmd.service 
+systemctl enable gsad.service
+systemctl daemon-reload
+
+# start openvas services right now to 
+systemctl start openvassd.service
+systemctl start openvasmd.service 
+systemctl start gsad.service
+
+# openvassd already started so this will be successful
 openvasmd --progress --rebuild
 
-# something is getting hung up here
+# create the certificate infrastructure
+# -f # force overwrite
+# -a # auto setup directories
 openvas-manage-certs -fa
-
 
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-db-update.sh /usr/local/sbin/openvas-db-update.sh
 
+# openvas database update script to run all odd days
 (crontab -l 2>/dev/null; echo "0 0 1-31/2 * * /usr/local/sbin/openvas-db-update.sh &") | crontab -
 
-# need to check if this adds to the end of crontab or not!!!
+# system update/upgrade script to run all even days
 (crontab -l 2>/dev/null; echo "0 0 2-30/2 * * apt-get update && apt-get dist-upgrade -y") | crontab -
 
-# cp services to correct directories
-
-cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-manager.service /etc/systemd/system/openvas-manager.service
-cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-scanner.service /etc/systemd/system/openvas-scanner.service
-cp /etc/OpenVAS/deb9_OpenVAS_deploy/greenbone-security-assistant.service /etc/systemd/system/greenbone-security-assistant.service
-
-systemctl enable openvas-manager.service
-systemctl enable openvas-scanner.service
-systemctl enable greenbone-security-assistant.service
-
-cp /etc/systemd/system/redis.service /etc/systemd/system/redis.service.bak
-sed -i 's+PrivateTmp=yes+PrivateTmp=no+' /etc/systemd/system/redis.service
-
+# force no blank passwords for openvas
 sed -i 's+#!/^.{8,}$/+!/^.{8,}$/+' /usr/local/etc/openvas/pwpolicy.conf
-
-# remove this && DO NOT SCRIPT!!!!!!!!!!!!!!!!!!
-#openvasmd --create-user=administrator --role=Admin && openvasmd --user=administrator --new-password=Password01
-
-# or hung up here???
-openvassd
-openvasmd
-gsad
-
-# does this need to go after "openvas-manage-certs -fa"
-#openvasmd --progress --rebuild
-
-# redis-server background save may fail under low memory condition, changing to "1"
-cp /etc/sysctl.conf /etc/sysctl.conf.bak
-echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
-sysctl vm.overcommit_memory=1
 
 # fix latency issues with redis-server
 #echo never > /sys/kernel/mm/transparent_hugepage/enabled
@@ -155,16 +150,22 @@ sysctl vm.overcommit_memory=1
 #sed -i 's+exit 0+echo never > /sys/kernel/mm/transparent_hugepage/enabled+' /etc/rc.local
 #echo 'exit 0' >> /etc/rc.local
 
-## /etc/rc.local creation
+# /etc/rc.local creation
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc-local.service /etc/systemd/system/rc-local.service
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc.local /etc/rc.local
 systemctl enable rc-local
+systemctl daemon-reload
 systemctl start rc-local.service
 
 #make alias for easier console management in userspace
-echo "alias ompadm='omp --host=127.0.0.1 --port=9391 --username=admin'" >> ~/.bashrc
+echo "alias ompadm='omp --host=127.0.0.1 --port=9391 --username=admin --pretty-print'" >> ~/.bashrc
 . ~/.bashrc
 
 /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-check-setup.sh --v9
+
+# Not scripted, but this is what you'll need to run to log in into the webserver and
+# make 'openvas-check-setup.sh --v9' finish successfully
+#openvasmd --create-user=administrator --role=Admin && openvasmd --user=administrator --new-password=
+
 
 reboot
