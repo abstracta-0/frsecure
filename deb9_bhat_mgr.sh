@@ -10,7 +10,6 @@ apt-get install -y screen texlive-latex-base texlive-latex-extra texlive-latex-r
 
 apt-get purge -y texlive-*-doc 
 
-apt-get clean -y
 # cleanly download and compile packages/libraries to /etc/OpenVAS
 mkdir /etc/OpenVAS
 path="/etc/OpenVAS"
@@ -168,4 +167,5 @@ echo "alias ompadm='omp --host=127.0.0.1 --port=9391 --username=admin --pretty-p
 #openvasmd --create-user=administrator --role=Admin && openvasmd --user=administrator --new-password=
 
 
+apt-get clean -y
 reboot
