@@ -40,7 +40,7 @@ systemctl enable redis_6379
 systemctl daemon-reload
 systemctl start redis_6379
 
-cd openvas-libraries-9.0.1/
+cd /etc/OpenVAS/openvas-libraries-9.0.1/
 mkdir build
 cd build/
 cmake ..
