@@ -8,7 +8,7 @@ apt-get update && apt-get dist-upgrade -y
 
 apt-get install -y texlive-latex-base texlive-latex-extra texlive-latex-recommended net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3 libhiredis-dev libgcrypt20-dev libgnutls28-dev redis-server linux-headers-$(uname -r) python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin certbot nmap ufw
 
-apt-get purge -y texlive-pstricks-doc texlive-pictures-doc texlive-latex-extra-doc texlive-latex-base-doc texlive-latex-recommended-doc 
+apt-get purge -y texlive-*-doc 
 
 apt-get autoremove -y
 # cleanly download and compile packages/libraries to /etc/OpenVAS
