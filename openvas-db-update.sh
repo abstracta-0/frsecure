@@ -1,27 +1,27 @@
 #!/bin/bash
 echo "Updating OpenVAS Databases"
-systemctl is-active --quiet openvas-scanner.service
+systemctl is-active --quiet openvassd.service
 
 status=$(echo $?)
 
 while [ $status != 0 ];do
-	systemctl start openvas-scanner
+	systemctl start openvassd.service
 	status=$(echo $?)
 done
 
-systemctl is-active --quiet openvas-manager.service
+systemctl is-active --quiet openvasmd.service
 status=$(echo $?)
 
 while [ $status != 0 ];do
-	systemctl start openvas-manager
+	systemctl start openvasmd.service
 	status=$(echo $?)
 done
 
-systemctl is-active --quiet greenbone-security-assistant.service
+systemctl is-active --quiet gsad.service
 status=$(echo $?)
 
 while [ $status != 0 ];do
-	systemctl start greenbone-security-assistant
+	systemctl start gsad.service
 	status=$(echo $?)
 done
 
