@@ -40,6 +40,8 @@ sed -i 's+REDISPORT="6379"+REDISPORT="0"+' /etc/init.d/redis_6379
 systemctl enable redis_6379
 systemctl daemon-reload
 systemctl start redis_6379
+systemctl stop redis-server
+systemctl disable redis-server
 
 cd /etc/OpenVAS/openvas-libraries-9.0.1/
 mkdir build
