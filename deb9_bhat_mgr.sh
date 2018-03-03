@@ -4,7 +4,7 @@
 
 # dhclient
 
-apt-get install -y tcl screen libhiredis-dev redis-server texlive-latex-base texlive-latex-extra texlive-latex-recommended net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3  libgcrypt20-dev libgnutls28-dev linux-headers-$(uname -r) python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin certbot nmap ufw
+apt-get install -y screen libhiredis-dev redis-server texlive-latex-base texlive-latex-extra texlive-latex-recommended net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3  libgcrypt20-dev libgnutls28-dev linux-headers-$(uname -r) python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin certbot nmap ufw
 
 apt-get purge -y texlive-*-doc 
 
@@ -13,7 +13,7 @@ mkdir /etc/OpenVAS
 path="/etc/OpenVAS"
 cd $(echo $path | tr -d '\r')
 
-wget -nc http://download.redis.io/releases/redis-stable.tar.gz
+#wget -nc http://download.redis.io/releases/redis-stable.tar.gz
 wget -nc http://wald.intevation.org/frs/download.php/2420/openvas-libraries-9.0.1.tar.gz
 wget -nc http://wald.intevation.org/frs/download.php/2423/openvas-scanner-5.1.1.tar.gz
 wget -nc http://wald.intevation.org/frs/download.php/2448/openvas-manager-7.0.2.tar.gz
@@ -26,22 +26,22 @@ wget -nc http://wald.intevation.org/frs/download.php/2218/ospd-nmap-1.0b1.tar.gz
 
 for i in $(ls *.tar.gz); do tar zxvf $i; done
 
-cd redis-stable/
-make
-make install
-make test
-yes '' | /etc/OpenVAS/redis-stable/utils/install_server.sh
+#cd redis-stable/
+#make
+#make install
+#make test
+#yes '' | /etc/OpenVAS/redis-stable/utils/install_server.sh
 ### Redis 4.0 setup ### UNTESTED ######
 # things for redis 3.x with "##" were previously enabled
-sed -i 's+port 6379+port 0+' /etc/redis/6379.conf
-sed -i 's+# unixsocket /tmp/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/6379.conf
-sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/6379.conf
-sed -i 's+REDISPORT="6379"+REDISPORT="0"+' /etc/init.d/redis_6379
-systemctl enable redis_6379
-systemctl daemon-reload
-systemctl start redis_6379
-systemctl stop redis-server
-systemctl disable redis-server
+#sed -i 's+port 6379+port 0+' /etc/redis/6379.conf
+#sed -i 's+# unixsocket /tmp/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/6379.conf
+#sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/6379.conf
+#sed -i 's+REDISPORT="6379"+REDISPORT="0"+' /etc/init.d/redis_6379
+#systemctl enable redis_6379
+#systemctl daemon-reload
+#systemctl start redis_6379
+#systemctl stop redis-server
+#systemctl disable redis-server
 
 cd /etc/OpenVAS/openvas-libraries-9.0.1/
 mkdir build
@@ -98,14 +98,14 @@ python setup.py build
 python setup.py install
 cd ../
 
-#cp /etc/redis/redis.conf /etc/redis/redis.conf.bak
-#sed -i 's+port 6379+port 0+' /etc/redis/redis.conf
-#sed -i 's+# unixsocket /var/run/redis/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/redis.conf
-#sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/redis.conf
+cp /etc/redis/redis.conf /etc/redis/redis.conf.bak
+sed -i 's+port 6379+port 0+' /etc/redis/redis.conf
+sed -i 's+# unixsocket /var/run/redis/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/redis.conf
+sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/redis.conf
 
 # stop from making redis socket in /tmp/systemd-private-*-redis-server.service-*/tmp/redis.sock
 ## not relevant to redis 4.0
-##sed -i 's+PrivateTmp=yes+PrivateTmp=no+' /etc/systemd/system/redis.service
+sed -i 's+PrivateTmp=yes+PrivateTmp=no+' /etc/systemd/system/redis.service
 
 # redis-server background save may fail under low memory condition, changing to "1"
 ## this is a redis 3.x configuration
@@ -113,7 +113,7 @@ cp /etc/sysctl.conf /etc/sysctl.conf.bak
 echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
 sysctl vm.overcommit_memory=1
 
-##service redis-server restart
+service redis-server restart
 ldconfig -v
 
 # generate an openvassd conf file from the defaul one currently running
