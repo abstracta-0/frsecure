@@ -113,6 +113,9 @@ cp /etc/sysctl.conf /etc/sysctl.conf.bak
 echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
 sysctl vm.overcommit_memory=1
 
+echo 'net.ipv4.tcp_timestamps = 0' >> /etc/sysctl.conf
+sysctl net.ipv4.tcp_timestamps=0
+
 service redis-server restart
 ldconfig -v
 
