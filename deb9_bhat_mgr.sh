@@ -4,7 +4,7 @@
 
 # dhclient
 
-apt-get install -y screen libhiredis-dev redis-server texlive-latex-base texlive-latex-extra texlive-latex-recommended net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3  libgcrypt20-dev libgnutls28-dev linux-headers-$(uname -r) python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin certbot nmap ufw
+apt-get install -y autossh screen libhiredis-dev redis-server texlive-latex-base texlive-latex-extra texlive-latex-recommended net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3  libgcrypt20-dev libgnutls28-dev linux-headers-$(uname -r) python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin certbot nmap ufw
 
 apt-get purge -y texlive-*-doc 
 
@@ -100,7 +100,7 @@ cd ../
 
 cp /etc/redis/redis.conf /etc/redis/redis.conf.bak
 sed -i 's+port 6379+port 0+' /etc/redis/redis.conf
-sed -i 's+# unixsocket /var/run/redis/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/redis.conf
+sed -i 's+# unixsocket /var/run/redis/redis-server.sock+unixsocket /var/run/redis/redis-server.sock+' /etc/redis/redis.conf
 sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/redis.conf
 
 # stop from making redis socket in /tmp/systemd-private-*-redis-server.service-*/tmp/redis.sock
@@ -119,7 +119,7 @@ ldconfig -v
 # generate an openvassd conf file from the defaul one currently running
 openvassd -s > /usr/local/etc/openvas/openvassd.conf
 cp /usr/local/etc/openvas/openvassd.conf /usr/local/etc/openvas/openvassd.conf.bak
-sed -i 's+/tmp/redis.sock+/var/run/redis/redis.sock+' /usr/local/etc/openvas/openvassd.conf
+sed -i 's+/tmp/redis.sock+/var/run/redis/redis-server.sock+' /usr/local/etc/openvas/openvassd.conf
 
 greenbone-nvt-sync
 greenbone-scapdata-sync
