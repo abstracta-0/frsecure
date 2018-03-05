@@ -6,7 +6,9 @@ mkdir /etc/OpenVAS
 path2="/etc/OpenVAS"
 cd $(echo $path2 | tr -d '\r')
 
-apt-get update && apt-get dist-upgrade -y
+echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/sources.list
+
+apt-get update && apt-get -t stretch-backports dist-upgrade -y
 
 git clone -b master-v2 https://github.com/abstracta-0/deb9_OpenVAS_deploy.git
 
