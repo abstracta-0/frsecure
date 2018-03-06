@@ -9,24 +9,24 @@ clear
 service gsad status | less
 
 clear
-service redis_6379 status | less
+service redis-server status | less
 
 clear
 service rc-local status | less
 
 clear
-cat /etc/rc.local
+less +G /etc/rc.local
 
 clear
 echo "'crontab -l'"
 echo ""
-crontab -l
+crontab -l | less
 
 clear
 echo "*************************************"
-echo "less +G /var/log/redis_6379.log" | less
+echo "less +G /var/log/redis/redis-server.log" | less
 echo "*************************************"
-less +G /var/log/redis_6379.log
+less +G /var/log/redis/redis-server.log
 
 clear
 echo "*************************************"
