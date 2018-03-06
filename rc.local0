@@ -10,5 +10,5 @@
 # bits.
 #
 # By default this script does nothing.
-/etc/OpenVAS/deb9_OpenVAS_deploy/deb9_bhat_mgr.sh |& tee /etc/OpenVAS/deb9_OpenVAS_deploy/install.log
+/etc/OpenVAS/deb9_OpenVAS_deploy/deb9_bhat_mgr.sh > /etc/OpenVAS/deb9_OpenVAS_deploy/install.log &
 exit 0
