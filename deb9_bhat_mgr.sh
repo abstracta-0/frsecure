@@ -158,10 +158,10 @@ openvasmd --progress --rebuild
 # -a # auto setup directories
 openvas-manage-certs -fa
 
-cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-db-update.sh /usr/local/sbin/openvas-db-update.sh
+cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-db-update.sh /opt/openvas-db-update.sh
 
 # openvas database update script to run all odd days
-(crontab -l 2>/dev/null; echo "0 0 1-31/2 * * /usr/local/sbin/openvas-db-update.sh &") | crontab -
+(crontab -l 2>/dev/null; echo "0 0 1-31/2 * * /opt/openvas-db-update.sh &") | crontab -
 
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/system_update.sh /opt/system_update.sh
 # system update/upgrade script to run all even days
