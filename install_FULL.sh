@@ -10,10 +10,12 @@ echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/sourc
 
 apt-get update && apt-get -t stretch-backports dist-upgrade -y
 
-git clone -b master-v2 https://github.com/abstracta-0/deb9_OpenVAS_deploy.git
+reboot
 
-cd deb9_OpenVAS_deploy
+#git clone -b master-v2 https://github.com/abstracta-0/deb9_OpenVAS_deploy.git
 
-chmod +x *
+#cd deb9_OpenVAS_deploy
 
-/bin/bash /etc/OpenVAS/deb9_OpenVAS_deploy/deb9_bhat_mgr.sh |& tee install.log
+#chmod +x *
+
+#/bin/bash /etc/OpenVAS/deb9_OpenVAS_deploy/deb9_bhat_mgr.sh |& tee install.log
