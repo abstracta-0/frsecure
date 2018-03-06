@@ -2,11 +2,17 @@
 
 # insure that the system is up to date
 
-# dhclient
+#dhclient
+
+# /etc/rc.local creation
+cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc.local /etc/rc.local
+systemctl enable rc-local
+systemctl daemon-reload
+#systemctl start rc-local.service
 
 apt-get install -y autossh screen libhiredis-dev redis-server texlive-latex-base texlive-latex-extra texlive-latex-recommended net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3  libgcrypt20-dev libgnutls28-dev linux-headers-$(uname -r) python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin certbot nmap ufw
 
-apt-get purge -y texlive-*-doc 
+apt-get purge -y texlive-*-doc
 
 # cleanly download and compile packages/libraries to /etc/OpenVAS
 mkdir /etc/OpenVAS
@@ -26,13 +32,13 @@ wget -nc http://wald.intevation.org/frs/download.php/2218/ospd-nmap-1.0b1.tar.gz
 
 for i in $(ls *.tar.gz); do tar zxvf $i; done
 
+### Redis 4.0 setup ### UNTESTED ######
+### this is now unneccessary b/c of stretch-backports
 #cd redis-stable/
 #make
 #make install
 #make test
 #yes '' | /etc/OpenVAS/redis-stable/utils/install_server.sh
-### Redis 4.0 setup ### UNTESTED ######
-# things for redis 3.x with "##" were previously enabled
 #sed -i 's+port 6379+port 0+' /etc/redis/6379.conf
 #sed -i 's+# unixsocket /tmp/redis.sock+unixsocket /var/run/redis/redis.sock+' /etc/redis/6379.conf
 #sed -i 's+# unixsocketperm 700+unixsocketperm 700+' /etc/redis/6379.conf
@@ -135,13 +141,13 @@ cp /etc/OpenVAS/deb9_OpenVAS_deploy/gsad.service /etc/systemd/system/gsad.servic
 
 # start openvas services on startup
 systemctl enable openvassd.service
-systemctl enable openvasmd.service 
+systemctl enable openvasmd.service
 systemctl enable gsad.service
 systemctl daemon-reload
 
 # start openvas services right now
 systemctl start openvassd.service
-systemctl start openvasmd.service 
+systemctl start openvasmd.service
 systemctl start gsad.service
 
 # openvassd already started so this will be successful
@@ -157,8 +163,9 @@ cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-db-update.sh /usr/local/sbin/openvas
 # openvas database update script to run all odd days
 (crontab -l 2>/dev/null; echo "0 0 1-31/2 * * /usr/local/sbin/openvas-db-update.sh &") | crontab -
 
+cp /etc/OpenVAS/deb9_OpenVAS_deploy/system_update.sh /opt/system_update.sh
 # system update/upgrade script to run all even days
-(crontab -l 2>/dev/null; echo "0 0 2-30/2 * * apt-get update && apt-get dist-upgrade -y") | crontab -
+(crontab -l 2>/dev/null; echo "0 0 2-30/2 * * /opt/system_update.sh >> /var/log/system_update.log") | crontab -
 
 # force no blank passwords for openvas
 sed -i 's+#!/^.{8,}$/+!/^.{8,}$/+' /usr/local/etc/openvas/pwpolicy.conf
@@ -168,13 +175,6 @@ sed -i 's+#!/^.{8,}$/+!/^.{8,}$/+' /usr/local/etc/openvas/pwpolicy.conf
 #cp /etc/rc.local /etc/rc.local.bak
 #sed -i 's+exit 0+echo never > /sys/kernel/mm/transparent_hugepage/enabled+' /etc/rc.local
 #echo 'exit 0' >> /etc/rc.local
-
-# /etc/rc.local creation
-cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc-local.service /etc/systemd/system/rc-local.service
-cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc.local /etc/rc.local
-systemctl enable rc-local
-systemctl daemon-reload
-systemctl start rc-local.service
 
 #make alias for easier console management in userspace
 echo "alias ompadm='omp --host=127.0.0.1 --port=9391 --username=admin --pretty-print'" >> ~/.bashrc
