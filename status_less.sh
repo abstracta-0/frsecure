@@ -1,31 +1,49 @@
 #!/bin/bash
+clear
+service openvassd status | less
 
-service openvas-scanner status | less
+clear
+service openvasmd status | less
 
-echo "*************************************"
-echo "*************************************"
-service openvas-manager status | less
+clear
+service gsad status | less
 
-echo "*************************************"
-echo "*************************************"
-service greenbone-security-assistant status | less
-
-echo "*************************************"
-echo "*************************************"
+clear
 service redis-server status | less
 
-echo "*************************************"
-echo "*************************************"
+clear
 service rc-local status | less
 
-echo ""
-cat /etc/rc.local
+clear
+less +G /etc/rc.local
 
-echo "*************************************"
-echo "*************************************"
+clear
 echo "'crontab -l'"
 echo ""
-crontab -l
+crontab -l | less
+
+clear
 echo "*************************************"
+echo "less +G /var/log/redis/redis-server.log" | less
 echo "*************************************"
-tail -n 40 /var/log/redis/redis-server.log
+less +G /var/log/redis/redis-server.log
+
+clear
+echo "*************************************"
+echo "less +G /usr/local/var/log/openvas/openvassd.messages" | less
+echo "*************************************"
+less +G /usr/local/var/log/openvas/openvassd.messages
+
+clear
+echo "*************************************"
+echo "less +G /usr/local/var/log/openvas/openvasmd.log" | less
+echo "*************************************"
+less +G /usr/local/var/log/openvas/openvasmd.log
+
+clear
+echo "*************************************"
+echo "less +G /usr/local/var/log/openvas/gsad.log" | less
+echo "*************************************"
+less +G /usr/local/var/log/openvas/gsad.log
+
+clear

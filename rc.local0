@@ -10,7 +10,5 @@
 # bits.
 #
 # By default this script does nothing.
-sysctl -w net.core.somaxconn=65535
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-
+/etc/OpenVAS/deb9_OpenVAS_deploy/deb9_bhat_mgr.sh > /etc/OpenVAS/deb9_OpenVAS_deploy/install.log &
 exit 0

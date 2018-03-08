@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenVAS Manager
+After=network.target
+
+[Service]
+ExecStart=/usr/local/sbin/openvasmd --listen=127.0.0.1 --port=9391 --foreground
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
