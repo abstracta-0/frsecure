@@ -14,6 +14,8 @@ apt-get install -t stretch-backports -y ssh autossh screen libhiredis-dev redis-
 
 systemctl stop ssh
 systemctl disable ssh
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
+cp /etc/OpenVAS/deb9_OpenVAS_deploy/sshd_config.hardened /etc/ssh/sshd_config
 
 apt-get purge -y texlive-*-doc
 

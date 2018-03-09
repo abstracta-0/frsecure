@@ -3,7 +3,7 @@ Description=OpenVAS - Greenbone Security Assistant
 After=network.target
 
 [Service]
-ExecStart=/usr/local/sbin/gsad --foreground
+ExecStart=/usr/local/sbin/gsad --gnutls-priorities="SECURE128:-AES-128-CBC:-CAMELLIA-128-CBC:-VERS-SSL3.0:-VERS-TLS1.2" --foreground
 
 [Install]
 WantedBy=multi-user.target
