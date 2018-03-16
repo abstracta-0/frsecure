@@ -10,12 +10,12 @@ systemctl enable rc-local
 systemctl daemon-reload
 #systemctl start rc-local.service
 
-apt-get install -t stretch-backports -y sudo ssh autossh screen libhiredis-dev redis-server texlive-latex-base texlive-latex-extra texlive-latex-recommended net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3  libgcrypt20-dev libgnutls28-dev linux-headers-$(uname -r) python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin certbot nmap ufw
+apt-get install -t stretch-backports -y screen libhiredis-dev redis-server texlive-latex-base texlive-latex-extra texlive-latex-recommended net-tools build-essential cmake bison flex libpcap-dev pkg-config libglib2.0-dev libgpgme11-dev uuid-dev sqlfairy xmltoman doxygen libssh-dev libksba-dev libldap2-dev libsqlite3-dev libmicrohttpd-dev libxml2-dev libxslt1-dev xsltproc clang rsync rpm nsis alien sqlite3  libgcrypt20-dev libgnutls28-dev linux-headers-$(uname -r) python python-pip mingw-w64 heimdal-multidev libpopt-dev gnutls-bin certbot nmap ufw
 
-systemctl stop ssh
-systemctl disable ssh
-cp /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
-cp /etc/OpenVAS/deb9_OpenVAS_deploy/sshd_config.hardened /etc/ssh/sshd_config
+#systemctl stop ssh
+#systemctl disable ssh
+#cp /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
+#cp /etc/OpenVAS/deb9_OpenVAS_deploy/sshd_config.hardened /etc/ssh/sshd_config
 
 apt-get purge -y texlive-*-doc
 
@@ -170,7 +170,7 @@ cp /etc/OpenVAS/deb9_OpenVAS_deploy/openvas-db-update.sh /opt/openvas-db-update.
 
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/system_update.sh /opt/system_update.sh
 # system update/upgrade script to run all even days
-(crontab -l 2>/dev/null; echo "0 0 2-30/2 * * /opt/system_update.sh >> /var/log/system_update.log") | crontab -
+#(crontab -l 2>/dev/null; echo "0 0 2-30/2 * * /opt/system_update.sh >> /var/log/system_update.log") | crontab -
 
 # force no blank passwords for openvas
 sed -i 's+#!/^.{8,}$/+!/^.{8,}$/+' /usr/local/etc/openvas/pwpolicy.conf
