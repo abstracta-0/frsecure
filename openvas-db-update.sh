@@ -1,5 +1,8 @@
 #!/bin/bash
+echo "***************************************"
 echo "Updating OpenVAS Databases"
+date
+echo "***************************************"
 systemctl is-active --quiet openvassd.service
 
 status=$(echo $?)

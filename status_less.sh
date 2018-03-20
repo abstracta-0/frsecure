@@ -1,4 +1,15 @@
 #!/bin/bash
+echo "*************************************"
+echo "Welcome to the OpenVAS 'status_less.sh' script"
+echo ""
+echo "This will cycle through all statuses of all the relevent OpenVAS services"
+echo "Then cycle through the corresponding log files with 'less'"
+echo ""
+echo "Use 'Q' to cycle through each dialogue"
+echo "Use your arrow, 'Home' and 'End' keys to navigate log files"
+echo "Use '/' to start searching through the log files"
+echo "*************************************"
+ 
 clear
 service openvassd status | less
 
@@ -18,7 +29,7 @@ clear
 less +G /etc/rc.local
 
 clear
-echo "'crontab -l'"
+echo "'crontab -l'" | less
 echo ""
 crontab -l | less
 
@@ -47,3 +58,7 @@ echo "*************************************"
 less +G /usr/local/var/log/openvas/gsad.log
 
 clear
+echo "*************************************"
+echo "less +G /var/log/openvas-db-update.log" | less
+echo "*************************************"
+less +G /var/log/openvas-db-update.log
