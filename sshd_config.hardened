@@ -86,9 +86,9 @@ GSSAPIAuthentication no
 # and ChallengeResponseAuthentication to 'no'.
 UsePAM no
 
-AllowAgentForwarding yes
-#AllowTcpForwarding yes
-#GatewayPorts no
+AllowAgentForwarding no
+AllowTcpForwarding no
+GatewayPorts no
 X11Forwarding no
 #X11DisplayOffset 10
 #X11UseLocalhost yes
@@ -126,5 +126,5 @@ Subsystem	sftp	/usr/lib/openssh/sftp-server
 #	ForceCommand cvs server
 
 Protocol 2
-AllowUsers install
+AllowUsers vmuser
 UsePrivilegeSeparation yes
