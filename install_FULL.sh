@@ -9,7 +9,7 @@ cd $(echo $path2 | tr -d '\r')
 git clone -b master-v2 https://github.com/abstracta-0/deb9_OpenVAS_deploy.git
 chmod +x *
 
-echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/sources.list
+#echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/sources.list
 
 apt-get update && apt-get -t stretch-backports dist-upgrade -y
 
