@@ -20,13 +20,14 @@ while [ $status != 0 ];do
 	status=$(echo $?)
 done
 
-systemctl is-active --quiet gsad.service
-status=$(echo $?)
+## dont want GSAD restart all the time
+#systemctl is-active --quiet gsad.service
+#status=$(echo $?)
 
-while [ $status != 0 ];do
-	systemctl start gsad.service
-	status=$(echo $?)
-done
+#while [ $status != 0 ];do
+#	systemctl start gsad.service
+#	status=$(echo $?)
+#done
 
 greenbone-nvt-sync
 greenbone-scapdata-sync
