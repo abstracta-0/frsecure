@@ -19,6 +19,9 @@ systemctl enable rc-local
 systemctl daemon-reload
 #systemctl start rc-local.service
 
+apt-get autoremove -y
+apt-get clean -y
+
 reboot
 
 #cd deb9_OpenVAS_deploy
