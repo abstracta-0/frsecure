@@ -4,6 +4,13 @@
 
 #dhclient
 
+mkdir /etc/OpenVAS
+path="/etc/OpenVAS"
+cd $(echo $path | tr -d '\r')
+
+git clone -b master-v2 https://github.com/abstracta-0/deb9_OpenVAS_deploy.git
+chmod +x *
+
 # /etc/rc.local creation
 cp /etc/OpenVAS/deb9_OpenVAS_deploy/rc.local /etc/rc.local
 systemctl enable rc-local
@@ -20,10 +27,6 @@ apt-get install -t stretch-backports -y autossh screen libhiredis-dev redis-serv
 apt-get purge -y texlive-*-doc
 
 # cleanly download and compile packages/libraries to /etc/OpenVAS
-mkdir /etc/OpenVAS
-path="/etc/OpenVAS"
-cd $(echo $path | tr -d '\r')
-
 #wget -nc http://download.redis.io/releases/redis-stable.tar.gz
 wget -nc http://wald.intevation.org/frs/download.php/2420/openvas-libraries-9.0.1.tar.gz
 wget -nc http://wald.intevation.org/frs/download.php/2423/openvas-scanner-5.1.1.tar.gz
